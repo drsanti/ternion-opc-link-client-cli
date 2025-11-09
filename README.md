@@ -1,4 +1,4 @@
-# Application TypeScript Node
+# Ternion OPC Link Client CLI
 
 A TypeScript Node.js CLI application for interacting with OPC-UA servers via the QNetLinks OPC REST API, powered by `@ternion/opc-link-client`.
 
