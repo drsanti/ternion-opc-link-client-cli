@@ -37,6 +37,7 @@ docker-compose down
 
 ```bash
 npm install
+npm install @ternion/opc-link-client
 ```
 
 The application uses `@ternion/opc-link-client` version `^0.1.1` from npm, which includes convenience read methods for channels and vectors.
