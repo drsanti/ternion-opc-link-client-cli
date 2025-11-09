@@ -14,7 +14,9 @@
     "opc",
     "opc-ua",
     "ternion",
-    "test"
+    "typescript",
+    "node.js",
+    "cli"
   ],
   "author": "",
   "license": "ISC",
