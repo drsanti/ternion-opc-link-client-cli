@@ -1,0 +1,32 @@
+{
+  "name": "ternion-opc-link-client-cli",
+  "version": "1.0.0",
+  "description": "A TypeScript Node.js CLI application for interacting with OPC-UA servers via the QNetLinks OPC REST API, powered by @ternion/opc-link-client",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "opc",
+    "opc-ua",
+    "ternion",
+    "test"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@ternion/opc-link-client": "^0.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  opc-server:
+    image: drsanti/qnetlinks-opc-server
+    container_name: opc-ua-server
+    ports:
+      - "9999:9999" # OPC-UA server
+      - "9990:9990" # REST API / WebSocket
+      - "3100:3100" # Example REST client port
+    restart: unless-stopped
