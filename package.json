@@ -24,7 +24,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@ternion/opc-link-client": "^0.1.1"
+    "@ternion/opc-link-client": "^0.1.2"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",

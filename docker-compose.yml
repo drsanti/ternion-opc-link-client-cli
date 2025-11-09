@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   opc-server:
     image: drsanti/qnetlinks-opc-server

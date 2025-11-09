@@ -9,7 +9,14 @@
  * - Or set API_BASE_URL environment variable to customize the API URL
  */
 
-import { TernionOpcLinkClient } from "@ternion/opc-link-client";
+import {
+  TernionOpcLinkClient,
+  type ApiInfo,
+  type HealthStatus,
+  type NodeValue,
+  type AliasCollection,
+  type WriteResponse,
+} from "@ternion/opc-link-client";
 
 async function main(): Promise<void> {
   // Get API base URL from environment or use default
@@ -23,30 +30,33 @@ async function main(): Promise<void> {
   try {
     // Test API information and health
     console.log("1. Testing API Information...");
-    const apiInfo = await client.getApiInfo();
+    const apiInfo: ApiInfo = await client.getApiInfo();
     console.log("   API Info:", apiInfo);
 
     console.log("\n2. Testing Health Check...");
-    const health = await client.getHealth();
+    const health: HealthStatus = await client.getHealth();
     console.log("   Health:", health);
 
     // Test reading values
     console.log("\n3. Testing Read Operations...");
-    const allValues = await client.getValues();
+    const allValues: NodeValue[] = await client.getValues();
     console.log("   All cached values:", allValues);
+    console.log(`   Total nodes cached: ${allValues.length}`);
 
     // Test reading by alias
     console.log("\n4. Testing Alias Operations...");
     try {
-      const boolAlias = await client.getAlias("bool", 0);
+      const boolAlias: NodeValue = await client.getAlias("bool", 0);
       console.log("   Boolean alias 0:", boolAlias);
+      console.log(`     Value: ${boolAlias.value}, DataType: ${boolAlias.dataType}`);
     } catch (error) {
       console.log("   Boolean alias 0: Not available");
     }
 
     try {
-      const allBools = await client.getAllAliases("bool");
+      const allBools: AliasCollection = await client.getAllAliases("bool");
       console.log("   All boolean aliases:", allBools);
+      console.log(`     Found ${allBools.length} boolean channels`);
     } catch (error) {
       console.log("   All boolean aliases: Not available");
     }
@@ -54,18 +64,20 @@ async function main(): Promise<void> {
     // Test reading specific node
     console.log("\n5. Testing Node Read Operations...");
     try {
-      const nodeValue = await client.readNode({
+      const nodeValue: NodeValue = await client.readNode({
         nodeId: "ns=1;s=Boolean.0",
         forceRefresh: true,
       });
       console.log("   Read Boolean.0 (generic readNode):", nodeValue);
+      console.log(`     Status: ${nodeValue.statusCode}`);
     } catch (error) {
       console.log("   Read Boolean.0: Node not available");
     }
 
     try {
-      const cachedValue = await client.getValue("ns=1;s=Float.2");
+      const cachedValue: NodeValue = await client.getValue("ns=1;s=Float.2");
       console.log("   Cached Float.2:", cachedValue);
+      console.log(`     Status: ${cachedValue.statusCode}, Updated: ${cachedValue.updatedAt}`);
     } catch (error) {
       console.log("   Cached Float.2: Node not available");
     }
@@ -73,22 +85,25 @@ async function main(): Promise<void> {
     // Test convenience read methods for channels
     console.log("\n6. Testing Convenience Read Methods (Channels)...");
     try {
-      const boolValue = await client.readBoolean(0);
+      const boolValue: NodeValue = await client.readBoolean(0);
       console.log("   Read Boolean.0 (convenience):", boolValue);
+      console.log(`     Value: ${boolValue.value}`);
     } catch (error) {
       console.log("   Read Boolean.0: Not available");
     }
 
     try {
-      const int16Value = await client.readInt16(1, true); // force refresh
+      const int16Value: NodeValue = await client.readInt16(1, true); // force refresh
       console.log("   Read Int16.1 (force refresh):", int16Value);
+      console.log(`     Value: ${int16Value.value}`);
     } catch (error) {
       console.log("   Read Int16.1: Not available");
     }
 
     try {
-      const floatValue = await client.readFloat(2);
+      const floatValue: NodeValue = await client.readFloat(2);
       console.log("   Read Float.2 (convenience):", floatValue);
+      console.log(`     Value: ${floatValue.value}`);
     } catch (error) {
       console.log("   Read Float.2: Not available");
     }
@@ -96,22 +111,25 @@ async function main(): Promise<void> {
     // Test convenience read methods for vectors
     console.log("\n7. Testing Convenience Read Methods (Vectors)...");
     try {
-      const boolVector = await client.readBooleanVector();
+      const boolVector: NodeValue = await client.readBooleanVector();
       console.log("   Read BooleanVector:", boolVector);
+      console.log(`     DataType: ${boolVector.dataType}`);
     } catch (error) {
       console.log("   Read BooleanVector: Not available");
     }
 
     try {
-      const int16Vector = await client.readInt16Vector(true); // force refresh
+      const int16Vector: NodeValue = await client.readInt16Vector(true); // force refresh
       console.log("   Read Int16Vector (force refresh):", int16Vector);
+      console.log(`     DataType: ${int16Vector.dataType}`);
     } catch (error) {
       console.log("   Read Int16Vector: Not available");
     }
 
     try {
-      const floatVector = await client.readFloatVector();
+      const floatVector: NodeValue = await client.readFloatVector();
       console.log("   Read FloatVector:", floatVector);
+      console.log(`     DataType: ${floatVector.dataType}`);
     } catch (error) {
       console.log("   Read FloatVector: Not available");
     }
@@ -119,8 +137,9 @@ async function main(): Promise<void> {
     // Test writing values
     console.log("\n8. Testing Write Operations...");
     try {
-      const writeBool = await client.writeBoolean(0, true);
+      const writeBool: WriteResponse = await client.writeBoolean(0, true);
       console.log("   Write Boolean.0:", writeBool);
+      console.log(`     Status: ${writeBool.status}, Value: ${writeBool.result.value}`);
     } catch (error) {
       console.log(
         "   Write Boolean.0: Failed -",
@@ -129,8 +148,9 @@ async function main(): Promise<void> {
     }
 
     try {
-      const writeInt16 = await client.writeInt16(1, 42);
+      const writeInt16: WriteResponse = await client.writeInt16(1, 42);
       console.log("   Write Int16.1:", writeInt16);
+      console.log(`     Status: ${writeInt16.status}, Value: ${writeInt16.result.value}`);
     } catch (error) {
       console.log(
         "   Write Int16.1: Failed -",
@@ -139,8 +159,9 @@ async function main(): Promise<void> {
     }
 
     try {
-      const writeFloat = await client.writeFloat(2, 3.14159);
+      const writeFloat: WriteResponse = await client.writeFloat(2, 3.14159);
       console.log("   Write Float.2:", writeFloat);
+      console.log(`     Status: ${writeFloat.status}, Value: ${writeFloat.result.value}`);
     } catch (error) {
       console.log(
         "   Write Float.2: Failed -",
