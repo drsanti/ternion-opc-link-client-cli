@@ -306,5 +306,5 @@ The application includes comprehensive error handling. If the API is not availab
 
 ## License
 
-ISC
+MIT
 
